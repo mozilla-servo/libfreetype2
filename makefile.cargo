@@ -8,27 +8,26 @@ CONFIGURE_FLAGS := \
 
 ifeq (eabi,$(findstring eabi,$(TARGET)))
 
-    CC ?= $(TARGET)-gcc
-    AR ?= $(TARGET)-ar
-
-    CONFIGURE_FLAGS += \
-        --host=$(TARGET)
-
-    ifeq (androideabi,$(findstring androideabi,$(TARGET)))
+    ifneq ($(HOST),$(TARGET))
+        CC ?= $(TARGET)-gcc
+        AR ?= $(TARGET)-ar
 
         CONFIGURE_FLAGS += \
-            --with-sysroot=$(ANDROID_TOOLCHAIN)/sysroot \
-            $(NULL)
+            --host=$(TARGET)
 
+        ifeq (androideabi,$(findstring androideabi,$(TARGET)))
+
+            CONFIGURE_FLAGS += \
+                --with-sysroot=$(ANDROID_TOOLCHAIN)/sysroot \
+                $(NULL)
+
+        endif
     endif
-
-else
-
-CC ?= gcc
-AR ?= ar
 
 endif
 
+CC ?= gcc
+AR ?= ar
 
 SRC_DIR = $(shell pwd)
 
