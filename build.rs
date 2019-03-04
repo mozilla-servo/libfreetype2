@@ -2,13 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#[cfg(feature = "build-native-freetype")]
 extern crate cmake;
+#[cfg(feature = "build-native-freetype")]
 extern crate pkg_config;
 
-use cmake::Config;
-use std::env;
-
+#[cfg(feature = "build-native-freetype")]
 fn main() {
+    use cmake::Config;
+    use std::env;
+
     let target = env::var("TARGET").unwrap();
     if !target.contains("eabi") &&
         !target.contains("android") &&
@@ -32,3 +35,6 @@ fn main() {
     println!("cargo:rustc-link-lib=static=freetype");
     println!("cargo:outdir={}", out_dir);
 }
+
+#[cfg(not(feature = "build-native-freetype"))]
+fn main() {}
